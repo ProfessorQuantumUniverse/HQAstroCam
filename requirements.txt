@@ -1,0 +1,8 @@
+# HQAstroCam – Python dependencies
+# picamera2 must be installed via apt: sudo apt install python3-picamera2
+# or: pip install picamera2  (requires libcamera system libraries)
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+Pillow==10.2.0
+python-multipart==0.0.9
+aiofiles==23.2.1

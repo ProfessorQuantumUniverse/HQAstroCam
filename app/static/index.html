@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HQAstroCam</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔭</text></svg>" />
+</head>
+<body>
+  <!-- ================================================================== -->
+  <!-- TOP BAR -->
+  <!-- ================================================================== -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <span class="logo">🔭 HQAstroCam</span>
+      <span id="rec-badge" class="hidden">⏺ REC</span>
+    </div>
+    <div class="topbar-center" id="status-bar">
+      <span id="sys-temp">…</span>
+      <span class="sep">|</span>
+      <span id="sys-disk">…</span>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="btn-network" title="Network settings">📡</button>
+      <button class="icon-btn" id="btn-files-toggle" title="Toggle file browser">📂</button>
+      <button class="icon-btn" id="btn-dim" title="Toggle red-dim mode">🔴</button>
+    </div>
+  </header>
+
+  <!-- ================================================================== -->
+  <!-- NETWORK MODAL -->
+  <!-- ================================================================== -->
+  <div id="network-modal" class="modal hidden">
+    <div class="modal-box">
+      <h2>📡 Network Settings</h2>
+      <div id="net-status-block"></div>
+
+      <div class="net-section">
+        <button class="btn btn-danger" id="btn-hotspot">Enable Hotspot</button>
+        <p class="hint">Creates Wi-Fi: <strong id="hotspot-ssid">HQAstroCam</strong>
+           &nbsp;PW: <strong>astrocam2024</strong></p>
+      </div>
+
+      <div class="net-section">
+        <h3>Connect to WiFi</h3>
+        <button class="btn btn-secondary" id="btn-scan">Scan Networks</button>
+        <select id="wifi-list" size="4" style="width:100%;margin-top:6px;">
+          <option value="">— scan first —</option>
+        </select>
+        <input type="password" id="wifi-password" placeholder="Password" style="width:100%;margin-top:6px;" />
+        <button class="btn btn-primary" id="btn-wifi-connect" style="margin-top:6px;">Connect</button>
+      </div>
+
+      <button class="btn btn-secondary" id="btn-net-close" style="margin-top:12px;">Close</button>
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
+  <!-- MAIN LAYOUT -->
+  <!-- ================================================================== -->
+  <main id="main-layout">
+
+    <!-- LEFT PANEL – Camera Settings -->
+    <aside id="settings-panel">
+      <h2>⚙️ Camera Settings</h2>
+
+      <!-- Presets -->
+      <div class="section-label">Preset</div>
+      <div id="presets-container"></div>
+
+      <!-- Controls -->
+      <div class="section-label" style="margin-top:14px;">Controls</div>
+      <div id="controls-container"></div>
+
+      <button class="btn btn-primary" id="btn-apply" style="margin-top:14px;width:100%;">Apply Settings</button>
+    </aside>
+
+    <!-- CENTER – Preview + Capture -->
+    <section id="preview-section">
+      <div id="preview-wrapper">
+        <img id="preview-img" src="/stream" alt="Live Preview" />
+        <div id="preview-overlay">
+          <span id="overlay-exposure"></span>
+          <span id="overlay-gain"></span>
+        </div>
+      </div>
+
+      <!-- Capture controls -->
+      <div id="capture-controls">
+        <div class="capture-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="chk-raw" /> Save RAW (DNG)
+          </label>
+        </div>
+        <div class="capture-row">
+          <button class="btn btn-primary big-btn" id="btn-capture">📸 Capture Photo</button>
+        </div>
+        <div class="capture-row">
+          <button class="btn btn-danger big-btn" id="btn-record">⏺ Start Video</button>
+          <select id="fps-select" title="Frames per second">
+            <option value="5">5 fps</option>
+            <option value="10">10 fps</option>
+            <option value="15">15 fps</option>
+            <option value="25" selected>25 fps</option>
+            <option value="30">30 fps</option>
+            <option value="60">60 fps</option>
+          </select>
+        </div>
+        <div id="capture-feedback" class="capture-feedback hidden"></div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL – File Browser -->
+    <aside id="files-panel">
+      <h2>📂 Captures</h2>
+      <button class="btn btn-secondary" id="btn-refresh-files" style="width:100%;margin-bottom:8px;">Refresh</button>
+      <div id="files-list"></div>
+    </aside>
+
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
