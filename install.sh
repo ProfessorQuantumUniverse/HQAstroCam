@@ -85,7 +85,9 @@ python3 -m venv --system-site-packages "$APP_DIR/venv"
 }
 "$APP_DIR/venv/bin/pip" install -r "$APP_DIR/requirements.txt" || {
   echo "ERROR: Failed to install Python dependencies"
-  echo "Try running: sudo apt-get install -y libjpeg-dev zlib1g-dev libfreetype6-dev"
+  echo "Ensure build dependencies are installed:"
+  echo "  sudo apt-get install -y libjpeg-dev zlib1g-dev libfreetype6-dev \\"
+  echo "    liblcms2-dev libwebp-dev libharfbuzz-dev libfribidi-dev tcl-dev tk-dev"
   exit 1
 }
 chown -R "$ASTROCAM_USER:$ASTROCAM_USER" "$APP_DIR/venv"
