@@ -4,7 +4,6 @@ Uses nmcli (NetworkManager) to manage WiFi, hotspot and Ethernet.
 """
 from __future__ import annotations
 
-import asyncio
 import logging
 import os
 import re

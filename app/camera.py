@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import io
 import logging
-import os
 import threading
 import time
 from pathlib import Path
@@ -20,7 +19,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 try:
     from picamera2 import Picamera2
-    from picamera2.encoders import H264Encoder, MJPEGEncoder, Quality
+    from picamera2.encoders import H264Encoder, MJPEGEncoder
     from picamera2.outputs import FileOutput, FfmpegOutput
     PICAMERA2_AVAILABLE = True
     logger.info("picamera2 loaded successfully")
@@ -334,7 +333,7 @@ class MockCamera:
     def _generate_frames(self) -> None:
         """Generate synthetic preview frames for demo mode."""
         try:
-            from PIL import Image, ImageDraw, ImageFont
+            from PIL import Image, ImageDraw
             import math
             frame_num = 0
             while self._running:

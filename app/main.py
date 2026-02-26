@@ -8,12 +8,11 @@ import logging
 import mimetypes
 import os
 import subprocess
-import time
 from pathlib import Path
 from typing import Any, AsyncGenerator
 
 import aiofiles
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import (
     FileResponse,
     HTMLResponse,
