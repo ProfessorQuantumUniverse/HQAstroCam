@@ -41,7 +41,17 @@ apt-get install -y --no-install-recommends \
   ffmpeg \
   network-manager \
   iproute2 \
-  curl
+  curl \
+  rsync \
+  libjpeg-dev \
+  zlib1g-dev \
+  libfreetype6-dev \
+  liblcms2-dev \
+  libwebp-dev \
+  libharfbuzz-dev \
+  libfribidi-dev \
+  tcl-dev \
+  tk-dev
 
 # ── User & directories ────────────────────────────────────────────────────────
 echo "[2/7] Creating user and directories…"
@@ -69,8 +79,15 @@ chown -R "$ASTROCAM_USER:$ASTROCAM_USER" "$APP_DIR"
 echo "[4/7] Setting up Python virtual environment…"
 python3 -m venv --system-site-packages "$APP_DIR/venv"
 # system-site-packages lets us use apt-installed picamera2 + libcamera bindings
-"$APP_DIR/venv/bin/pip" install --quiet --upgrade pip
-"$APP_DIR/venv/bin/pip" install --quiet -r "$APP_DIR/requirements.txt"
+"$APP_DIR/venv/bin/pip" install --upgrade pip || {
+  echo "ERROR: Failed to upgrade pip"
+  exit 1
+}
+"$APP_DIR/venv/bin/pip" install -r "$APP_DIR/requirements.txt" || {
+  echo "ERROR: Failed to install Python dependencies"
+  echo "Try running: sudo apt-get install -y libjpeg-dev zlib1g-dev libfreetype6-dev"
+  exit 1
+}
 chown -R "$ASTROCAM_USER:$ASTROCAM_USER" "$APP_DIR/venv"
 
 # ── Enable camera in config.txt ───────────────────────────────────────────────
