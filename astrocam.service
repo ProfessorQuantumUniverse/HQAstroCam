@@ -1,0 +1,25 @@
+[Unit]
+Description=HQAstroCam – Raspberry Pi HQ Camera Astrophotography Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=astrocam
+Group=astrocam
+WorkingDirectory=/opt/astrocam
+Environment=PYTHONUNBUFFERED=1
+Environment=ASTROCAM_CAPTURES=/var/lib/astrocam/captures
+ExecStart=/opt/astrocam/venv/bin/uvicorn app.main:app \
+    --host 0.0.0.0 \
+    --port 8080 \
+    --workers 1 \
+    --log-level info
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=astrocam
+
+[Install]
+WantedBy=multi-user.target
