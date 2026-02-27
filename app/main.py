@@ -8,6 +8,7 @@ import logging
 import mimetypes
 import os
 import subprocess
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, AsyncGenerator
 
@@ -37,34 +38,30 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-BASE_DIR     = Path(__file__).parent
-STATIC_DIR   = BASE_DIR / "static"
+BASE_DIR = Path(__file__).parent
+STATIC_DIR = BASE_DIR / "static"
 CAPTURES_DIR = Path(os.environ.get("ASTROCAM_CAPTURES", "/var/lib/astrocam/captures"))
 
 # ---------------------------------------------------------------------------
 # App & camera
 # ---------------------------------------------------------------------------
-app = FastAPI(title="HQAstroCam", version="1.0.0")
 camera = create_camera(CAPTURES_DIR)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    logger.info("HQAstroCam started. Captures → %s", CAPTURES_DIR)
+    yield
+    camera.close()
+    logger.info("HQAstroCam stopped")
+
+
+app = FastAPI(title="HQAstroCam", version="1.0.0", lifespan=lifespan)
 
 # ---------------------------------------------------------------------------
 # Mount static files
 # ---------------------------------------------------------------------------
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
-
-
-# ---------------------------------------------------------------------------
-# Startup / shutdown
-# ---------------------------------------------------------------------------
-@app.on_event("startup")
-async def _startup() -> None:
-    logger.info("HQAstroCam started. Captures → %s", CAPTURES_DIR)
-
-
-@app.on_event("shutdown")
-async def _shutdown() -> None:
-    camera.close()
-    logger.info("HQAstroCam stopped")
 
 
 # ---------------------------------------------------------------------------
@@ -82,8 +79,11 @@ async def index() -> HTMLResponse:
 # ---------------------------------------------------------------------------
 async def _mjpeg_generator() -> AsyncGenerator[bytes, None]:
     boundary = b"--frame"
+    # get_running_loop() is safe here: an async generator runs in exactly one
+    # event loop for its entire lifetime and cannot be resumed from another loop.
+    loop = asyncio.get_running_loop()
     while True:
-        frame = camera.get_frame()
+        frame = await loop.run_in_executor(None, camera.get_frame)
         if frame:
             yield (
                 boundary
@@ -150,7 +150,7 @@ class CapturePayload(BaseModel):
 @app.post("/api/capture")
 async def capture_photo(payload: CapturePayload) -> JSONResponse:
     try:
-        files = await asyncio.get_event_loop().run_in_executor(
+        files = await asyncio.get_running_loop().run_in_executor(
             None, camera.capture_photo, payload.raw
         )
     except Exception as exc:
@@ -170,7 +170,7 @@ class VideoStartPayload(BaseModel):
 @app.post("/api/video/start")
 async def start_video(payload: VideoStartPayload) -> JSONResponse:
     try:
-        path = await asyncio.get_event_loop().run_in_executor(
+        path = await asyncio.get_running_loop().run_in_executor(
             None, camera.start_video, payload.fps
         )
     except Exception as exc:
@@ -181,7 +181,7 @@ async def start_video(payload: VideoStartPayload) -> JSONResponse:
 @app.post("/api/video/stop")
 async def stop_video() -> JSONResponse:
     try:
-        path = await asyncio.get_event_loop().run_in_executor(
+        path = await asyncio.get_running_loop().run_in_executor(
             None, camera.stop_video
         )
     except Exception as exc:
@@ -218,13 +218,13 @@ async def list_files() -> JSONResponse:
 @app.get("/api/files/{filename}")
 async def download_file(filename: str) -> FileResponse:
     path = CAPTURES_DIR / filename
-    if not path.exists() or not path.is_file():
-        raise HTTPException(status_code=404, detail="File not found")
-    # Prevent path traversal
+    # Prevent path traversal before any filesystem access
     try:
         path.resolve().relative_to(CAPTURES_DIR.resolve())
     except ValueError:
         raise HTTPException(status_code=403, detail="Forbidden")
+    if not path.exists() or not path.is_file():
+        raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(
         path=str(path),
         filename=filename,
@@ -235,12 +235,13 @@ async def download_file(filename: str) -> FileResponse:
 @app.delete("/api/files/{filename}")
 async def delete_file(filename: str) -> JSONResponse:
     path = CAPTURES_DIR / filename
-    if not path.exists() or not path.is_file():
-        raise HTTPException(status_code=404, detail="File not found")
+    # Prevent path traversal before any filesystem access
     try:
         path.resolve().relative_to(CAPTURES_DIR.resolve())
     except ValueError:
         raise HTTPException(status_code=403, detail="Forbidden")
+    if not path.exists() or not path.is_file():
+        raise HTTPException(status_code=404, detail="File not found")
     path.unlink()
     return JSONResponse({"deleted": filename})
 
@@ -250,19 +251,19 @@ async def delete_file(filename: str) -> JSONResponse:
 # ---------------------------------------------------------------------------
 @app.get("/api/network/status")
 async def network_status() -> JSONResponse:
-    status = await asyncio.get_event_loop().run_in_executor(None, net.get_status)
+    status = await asyncio.get_running_loop().run_in_executor(None, net.get_status)
     return JSONResponse(status)
 
 
 @app.get("/api/network/scan")
 async def network_scan() -> JSONResponse:
-    networks = await asyncio.get_event_loop().run_in_executor(None, net.scan_wifi)
+    networks = await asyncio.get_running_loop().run_in_executor(None, net.scan_wifi)
     return JSONResponse({"networks": networks})
 
 
 @app.post("/api/network/hotspot")
 async def network_hotspot() -> JSONResponse:
-    result = await asyncio.get_event_loop().run_in_executor(None, net.enable_hotspot)
+    result = await asyncio.get_running_loop().run_in_executor(None, net.enable_hotspot)
     if not result.get("success"):
         raise HTTPException(status_code=500, detail=result.get("error", "Unknown error"))
     return JSONResponse(result)
@@ -275,7 +276,7 @@ class WifiPayload(BaseModel):
 
 @app.post("/api/network/connect")
 async def network_connect(payload: WifiPayload) -> JSONResponse:
-    result = await asyncio.get_event_loop().run_in_executor(
+    result = await asyncio.get_running_loop().run_in_executor(
         None, net.connect_wifi, payload.ssid, payload.password
     )
     if not result.get("success"):
@@ -285,7 +286,7 @@ async def network_connect(payload: WifiPayload) -> JSONResponse:
 
 @app.post("/api/network/disconnect")
 async def network_disconnect() -> JSONResponse:
-    result = await asyncio.get_event_loop().run_in_executor(
+    result = await asyncio.get_running_loop().run_in_executor(
         None, net.disconnect_wifi
     )
     if not result.get("success"):
@@ -309,7 +310,7 @@ async def system_info() -> JSONResponse:
             )
             return result.stdout.strip()
 
-        info["cpu_temp"] = await asyncio.get_event_loop().run_in_executor(None, _read_temp)
+        info["cpu_temp"] = await asyncio.get_running_loop().run_in_executor(None, _read_temp)
     except Exception:
         try:
             with open("/sys/class/thermal/thermal_zone0/temp") as f:
