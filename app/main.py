@@ -23,7 +23,7 @@ from fastapi.responses import (
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app.camera import CONTROL_META, PRESETS, create_camera
+from app.camera import CONTROL_META, PRESETS, MockCamera, RealCamera, create_camera
 import app.network as net
 
 # ---------------------------------------------------------------------------
@@ -45,14 +45,17 @@ CAPTURES_DIR = Path(os.environ.get("ASTROCAM_CAPTURES", "/var/lib/astrocam/captu
 # ---------------------------------------------------------------------------
 # App & camera
 # ---------------------------------------------------------------------------
-camera = create_camera(CAPTURES_DIR)
+camera: RealCamera | MockCamera | None = None  # Initialized in lifespan
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    global camera
+    camera = create_camera(CAPTURES_DIR)
     logger.info("HQAstroCam started. Captures → %s", CAPTURES_DIR)
     yield
     camera.close()
+    camera = None
     logger.info("HQAstroCam stopped")
 
 
