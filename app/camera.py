@@ -227,10 +227,12 @@ class RealCamera:
         files: list[str] = []
 
         with self._lock:
-            # Switch to still configuration for full-res capture
+            # Merken, ob ein H264-Video lief, um es später neu zu starten
             was_recording = self._recording
-            if was_recording:
-                self._cam.stop_recording()
+            
+            # WICHTIG: *Immer* stop_recording() aufrufen, um den MJPEG-Preview-Encoder 
+            # und ggf. laufende Videos zu stoppen! Sonst hängt switch_mode()!
+            self._cam.stop_recording()
 
             still_cfg = self._cam.create_still_configuration(
                 main={"size": self.CAPTURE_SIZE},
