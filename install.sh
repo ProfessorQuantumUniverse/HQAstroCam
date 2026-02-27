@@ -130,6 +130,10 @@ ASTROCAM_WIFI_IF=${ASTROCAM_WIFI_IF:-wlan0}
 CONF
 chmod 600 "${INSTALL_ROOT}/etc/astrocam.conf"
 
+# Secure the config file and grant access to the astrocam user
+chown "$ASTROCAM_USER":"$ASTROCAM_USER" "${INSTALL_ROOT}/etc/astrocam.conf"
+chmod 600 "${INSTALL_ROOT}/etc/astrocam.conf"
+
 systemctl enable NetworkManager 2>/dev/null || true
 systemctl start  NetworkManager 2>/dev/null || true
 
@@ -172,6 +176,8 @@ cp "$SCRIPT_DIR/astrocam.service" "$SERVICE_FILE"
 systemctl daemon-reload
 systemctl enable astrocam.service
 systemctl restart astrocam.service
+
+
 
 echo ""
 echo "============================================"
