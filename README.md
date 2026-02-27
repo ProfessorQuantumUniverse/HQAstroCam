@@ -1,5 +1,9 @@
 # 🔭 HQAstroCam
 
+<p align="center">
+  <img src="assets/Banner_option2.png" alt="HQAstroCam - Raspberry Pi Astrophotography" width="100%">
+</p>
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python](https://img.shields.io/badge/Python-3.9+-yellow.svg)](https://www.python.org/)
 [![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi-red.svg)](https://www.raspberrypi.org/)
@@ -166,3 +170,8 @@ Distributed under the **GPL-3.0 License**. See `LICENSE` for more information.
 <p align="center">Made with ❤️ and 🔭 for the Astrophotography Community by Lorenzo Bay-Müller </p>
 
 ### © Lorenzo Bay-Müller 2026 ⸻> any future year you currently might have!
+
+
+<p align="center">
+  <img src="assets/Banner_option1.png" alt="HQAstroCam - Raspberry Pi Astrophotography" width="100%">
+</p>
