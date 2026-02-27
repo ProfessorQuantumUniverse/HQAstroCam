@@ -40,6 +40,7 @@ sudo bash install.sh
 # Reboot recommended after first install:
 sudo reboot
 ```
+**NOTE:** It is possible that the installscript at step 7/7 freezes. When that happens please wait 15 seconds and simply press strg+c to exit it (It be already finished at this point).
 
 After reboot, the Pi creates a Wi-Fi hotspot automatically if no other network is available:
 
