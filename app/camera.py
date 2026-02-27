@@ -31,7 +31,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 # Streaming output helper (thread-safe frame buffer)
 # ---------------------------------------------------------------------------
-class StreamingOutput(io.RawIOBase):
+class StreamingOutput(io.BufferedIOBase):
     """Thread-safe buffer used by MJPEGEncoder to deliver preview frames."""
 
     def __init__(self) -> None:
