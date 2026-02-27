@@ -17,6 +17,8 @@ Turn your Raspberry Pi into a powerful, standalone astrophotography rig! **HQAst
 
 ## Why HQAstroCam?
 
+In the first place, I spent WEEKS with searching a usable Software for the Raspberry Pi and its HQ Camera to use it as Astrocam. It should've been something like AstroDMx Capture but with a great WebUI like Cam UI therefore still with all features. And, most important, it should be built based on the new camera library stack from Bullseye and above!!! That's why I started this project! Have fun using it, and if you find any Errors, please open an Issue. If you want to contribute, which would I find very nice, feel free! Clone the repo local, edit, test, use and send a PR when done! I'll look into them! Thanks!
+
 - **Night-Vision Preserving UI**: A deep-navy theme with red accents and a one-click dim mode ensures your eyes stay dark-adapted while observing.
 - **Completely Self-Contained**: No external router needed! It automatically creates a Wi-Fi hotspot out in the field if no known network is found.
 - **Raw Power**: Capture uncompressed RAW (DNG) alongside JPEG photos at full IMX477 sensor resolution (4056 × 3040).
