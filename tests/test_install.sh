@@ -306,6 +306,14 @@ run_install() {
   grep -q "uvicorn" "${FAKE_ROOT}/etc/systemd/system/astrocam.service"
 }
 
+@test "service: listens on port 8080 (not 80)" {
+  run_install
+  [ "$status" -eq 0 ]
+
+  # Ensure port 8080 is specified, not port 80
+  grep -q -- "--port 8080" "${FAKE_ROOT}/etc/systemd/system/astrocam.service"
+}
+
 # ===========================================================================
 # 8. Overall success
 # ===========================================================================
