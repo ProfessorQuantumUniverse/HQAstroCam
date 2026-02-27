@@ -239,6 +239,10 @@ class RealCamera:
                 raw={"size": self._cam.sensor_resolution} if capture_raw else None,
             )
             self._cam.switch_mode(still_cfg)
+            
+            # WICHTIG: Nach einem switch_mode muss die Kamera-Pipeline gestartet werden,
+            # sonst wartet capture_file() ewig auf einen Frame und wirft einen Fehler.
+            self._cam.start()
 
             jpeg_path = str(self.capture_dir / f"photo_{timestamp}.jpg")
             if capture_raw:
@@ -252,11 +256,13 @@ class RealCamera:
 
             # Switch back to preview mode
             self._configure_preview()
+            # Nach configure_preview() sicherstellen, dass die Kamera wieder läuft
+            self._cam.start()
+            
             if was_recording:
                 self._start_recording_internal()
 
         return files
-
     # ------------------------------------------------------------------
     # Video
     # ------------------------------------------------------------------
