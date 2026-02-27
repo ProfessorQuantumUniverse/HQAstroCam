@@ -12,24 +12,24 @@ HQAstroCam is a purpose-built web application designed for the **Raspberry Pi HQ
 ---
 
 ## 🚀 The Story
-> *"I spent WEEKS searching for usable software for the Raspberry Pi HQ Camera to use it as an Astrocam. I wanted something powerful like AstroDMx Capture but with a sleek, modern WebUI that works with the new camera stack. Since I couldn't find it, I built it."* — **The Creator**
+> **I spent WEEKS searching for usable software for the Raspberry Pi HQ Camera to use it as an Astrocam. I wanted something powerful like AstroDMx Capture but with a sleek, modern WebUI that works with the new camera stack. Since I couldn't find it, I built it.**
 
 ---
 
-## ✨ Why HQAstroCam?
+## Why HQAstroCam?
 
-- **🌙 Night-Vision Preserving**: A deep-navy and red UI designed to keep your eyes dark-adapted. Toggle "Red Mode" with one click for maximum protection.
-- **🛰️ Zero-Config Field Work**: No router? No problem. HQAstroCam automatically spawns a Wi-Fi hotspot if no known networks are found—perfect for remote locations.
-- **📸 Full Sensor Power**: Capture uncompressed **RAW (DNG)** and high-quality JPEG photos at full 12.3MP resolution.
-- **🪐 Lucky Imaging Mode**: Record high-framerate H.264 MP4 videos (up to 60 fps) to "beat the seeing" for planetary and lunar stacking.
-- **⏱️ Long Exposures**: Native support for exposures from **100 µs up to 200 seconds**.
-- **🎯 Pro Controls**: Fine-tune Gain, White Balance, Focus (Lens Position), Noise Reduction, and more in real-time.
-- **📂 Built-in File Browser**: View, download, and manage your cosmic masterpieces directly from your browser.
-- **🌡️ System Health**: Monitor your Pi's CPU temperature and disk space in real-time.
+- **Night-Vision Preserving**: A deep-navy and red UI designed to keep your eyes dark-adapted. Toggle "Red Mode" with one click for maximum protection.
+- **Zero-Config Field Work**: No router? No problem. HQAstroCam automatically spawns a Wi-Fi hotspot if no known networks are found—perfect for remote locations.
+- **Full Sensor Power**: Capture uncompressed **RAW (DNG)** and high-quality JPEG photos at full 12.3MP resolution.
+- **Lucky Imaging Mode**: Record high-framerate H.264 MP4 videos (up to 60 fps) to "beat the seeing" for planetary and lunar stacking.
+- **Long Exposures**: Native support for exposures from **100 µs up to 200 seconds**.
+- **Controls**: Fine-tune Gain, White Balance, Focus (Lens Position), Noise Reduction, and more in real-time.
+- **Built-in File Browser**: View, download, and manage your cosmic masterpieces directly from your browser.
+- **System Health**: Monitor your Pi's CPU temperature and disk space in real-time.
 
 ---
 
-## 📱 User Interface
+## User Interface
 
 ### Main Dashboard
 The sleek dashboard provides all controls at your fingertips, with a live low-latency MJPEG preview.
@@ -86,7 +86,7 @@ sudo bash install.sh
 
 ---
 
-## 📷 Camera Verification
+## Camera Verification
 
 To ensure your Pi recognizes the HQ Camera properly:
 1. Ensure the CSI ribbon cable is firmly connected to the **camera port**.
@@ -99,7 +99,7 @@ To ensure your Pi recognizes the HQ Camera properly:
 
 ---
 
-## 🌌 Astrophotography Presets
+## Astrophotography Presets
 
 Forget about messing with tricky settings in the dark. Use our built-in starting points:
 
@@ -110,7 +110,7 @@ Forget about messing with tricky settings in the dark. Use our built-in starting
 
 ---
 
-## 📡 Connection Modes
+## Connection Modes
 
 1.  **Hotspot Mode (Field Work)**: If HQAstroCam can't find your home Wi-Fi, it creates its own network.
     *   **SSID:** `HQAstroCam`
@@ -121,7 +121,7 @@ Forget about messing with tricky settings in the dark. Use our built-in starting
 
 ---
 
-## 🛠️ Service Management
+## Service Management
 
 The app runs in the background as a systemd service. Manage it via CLI:
 
@@ -137,7 +137,7 @@ sudo systemctl status astrocam
 
 ---
 
-## 💻 Development & Demo Mode
+## Development & Demo Mode
 
 No Raspberry Pi? No problem! HQAstroCam features a **Demo Mode** with a synthetic star-field for UI development.
 
@@ -148,19 +148,21 @@ uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are what make the open-source community such an amazing place!
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+**Contributions are what make the open-source community such an amazing place!**
+**1. Fork the Project**
+**2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)**
+**3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)**
+**4. Push to the Branch (`git push origin feature/AmazingFeature`)**
+**5. Open a Pull Request**
 
-## 📜 License
+## License
 
 Distributed under the **GPL-3.0 License**. See `LICENSE` for more information.
 
 ---
 
-<p align="center">Made with ✨ for the Astrophotography Community</p>
+<p align="center">Made with ❤️ and 🔭 for the Astrophotography Community by Lorenzo Bay-Müller </p>
+
+### © Lorenzo Bay-Müller 2026 ⸻> any future year you currently might have!
