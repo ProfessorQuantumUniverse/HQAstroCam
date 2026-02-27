@@ -10,6 +10,8 @@ Group=astrocam
 WorkingDirectory=/opt/astrocam
 Environment=PYTHONUNBUFFERED=1
 Environment=ASTROCAM_CAPTURES=/var/lib/astrocam/captures
+StateDirectory=astrocam/captures
+StateDirectoryMode=0755
 ExecStart=/opt/astrocam/venv/bin/uvicorn app.main:app \
     --host 0.0.0.0 \
     --port 8080 \
