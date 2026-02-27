@@ -331,21 +331,19 @@ function renderFiles(files) {
     list.appendChild(item);
   });
 
-  list.querySelectorAll('.file-btn.dl').forEach(btn => {
-    btn.addEventListener('click', () => {
+  list.querySelectorAll('.file-btn.del').forEach(btn => {
+    btn.addEventListener('click', async () => {
       const name = btn.dataset.name;
-      // Erzeugt einen Link, der exakt dasselbe Protokoll (http/https) nutzt wie die aktuelle Seite
-      const url = window.location.origin + '/api/files/' + encodeURIComponent(name);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      if (!confirm(`Delete ${name}?`)) return;
+      try {
+        await api('DELETE', '/api/files/' + encodeURIComponent(name));
+        await loadFiles();
+      } catch (e) {
+        showFeedback('Delete failed: ' + e.message, false);
+      }
     });
   });
-
-  list.querySelectorAll('.file-btn.del').forEach(btn => {
+} // FIX: Missing closing brace for the renderFiles function
 
 $('btn-refresh-files').addEventListener('click', loadFiles);
 $('btn-files-toggle').addEventListener('click', () => {
