@@ -325,25 +325,27 @@ function renderFiles(files) {
         <div class="file-size">${formatBytes(f.size)} &middot; ${formatDate(f.mtime)}</div>
       </div>
       <div class="file-actions">
-        <a href="/api/files/${encodeURIComponent(f.name)}" download="${f.name}"
-           class="file-btn" title="Download">⬇</a>
+        <button class="file-btn dl" data-name="${f.name}" title="Download">⬇</button>
         <button class="file-btn del" data-name="${f.name}" title="Delete">🗑</button>
       </div>`;
     list.appendChild(item);
   });
 
-  list.querySelectorAll('.file-btn.del').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!confirm(`Delete ${btn.dataset.name}?`)) return;
-      try {
-        await api('DELETE', '/api/files/' + encodeURIComponent(btn.dataset.name));
-        await loadFiles();
-      } catch (e) {
-        showFeedback('Delete failed: ' + e.message, false);
-      }
+  list.querySelectorAll('.file-btn.dl').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.name;
+      // Erzeugt einen Link, der exakt dasselbe Protokoll (http/https) nutzt wie die aktuelle Seite
+      const url = window.location.origin + '/api/files/' + encodeURIComponent(name);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     });
   });
-}
+
+  list.querySelectorAll('.file-btn.del').forEach(btn => {
 
 $('btn-refresh-files').addEventListener('click', loadFiles);
 $('btn-files-toggle').addEventListener('click', () => {
