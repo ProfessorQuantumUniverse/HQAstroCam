@@ -381,7 +381,8 @@ async function refreshNetStatus() {
 $('btn-hotspot').addEventListener('click', async () => {
   $('btn-hotspot').disabled = true;
   try {
-    await api('POST', '/api/network/hotspot');
+    const data = await api('POST', '/api/network/hotspot');
+    if (data.password) $('hotspot-password').textContent = data.password;
     await refreshNetStatus();
   } catch (e) {
     alert('Hotspot error: ' + e.message);

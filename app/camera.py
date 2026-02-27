@@ -335,6 +335,8 @@ class MockCamera:
         try:
             from PIL import Image, ImageDraw
             import math
+            import random
+            rng = random.Random(42)
             frame_num = 0
             while self._running:
                 width, height = 1280, 720
@@ -343,8 +345,6 @@ class MockCamera:
                 draw = ImageDraw.Draw(img)
 
                 # Simulated stars
-                import random
-                rng = random.Random(42)
                 for _ in range(300):
                     x = rng.randint(0, width - 1)
                     y = rng.randint(0, height - 1)
@@ -435,7 +435,7 @@ class MockCamera:
         self._recording = True
         self._recording_path = path
         # Create an empty placeholder file
-        open(path, "wb").close()
+        Path(path).touch()
         return path
 
     def stop_video(self) -> str | None:
