@@ -1,161 +1,167 @@
-# HQAstroCam 🔭
+<div align="center">
 
-A fully self-contained astrophotography web application for the **Raspberry Pi HQ Camera** (IMX477), running on **Debian 13 (Trixie)** with the new **libcamera / picamera2** camera stack.
+# 🔭 HQAstroCam
 
-Access the live preview, adjust all camera parameters, capture photos (RAW + JPEG), record video for Lucky Imaging, manage your files, and configure networking – all from a modern, dark-themed Web UI designed to preserve your night vision.
+**A fully self-contained, night-vision-friendly astrophotography web application for the Raspberry Pi HQ Camera.**
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python](https://img.shields.io/badge/Python-3.9+-yellow.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi-red.svg)](https://www.raspberrypi.org/)
+[![OS](https://img.shields.io/badge/OS-Debian%2013%20(Trixie)-purple.svg)](https://www.debian.org/)
+
+</div>
 
 ---
 
-## Features
+Turn your Raspberry Pi into a powerful, standalone astrophotography rig! **HQAstroCam** is built around the modern `libcamera` and `picamera2` stack. It provides a sleek, dark-themed Web UI that protects your night vision while giving you full manual control over your camera sensor—perfect for capturing the cosmos, no matter where you are.
 
-| Feature | Details |
-|---------|---------|
-| **Live MJPEG Preview** | Real-time stream from the HQ Camera for focus and framing |
-| **Photo Capture** | JPEG + optional RAW (DNG) at full sensor resolution (4056 × 3040) |
-| **Video Recording** | H.264 MP4 for Lucky Imaging (5–60 fps selectable) |
-| **Camera Controls** | Gain, Exposure (100 µs – 200 s), White Balance, Noise Reduction, Focus, Brightness, Contrast, Saturation, Sharpness |
-| **Astrophotography Presets** | Deep Sky, Planetary/Moon, Lucky Imaging, Milky Way / Wide Field |
-| **File Browser** | Download or delete captured files from the browser |
-| **Network Management** | Hotspot (default), WiFi station mode, automatic Ethernet |
-| **Night Vision UI** | Deep-navy theme with red accents + one-click dim mode |
-| **System Info** | CPU temperature, disk space in the toolbar |
+## Why HQAstroCam?
+
+- **Night-Vision Preserving UI**: A deep-navy theme with red accents and a one-click dim mode ensures your eyes stay dark-adapted while observing.
+- **Completely Self-Contained**: No external router needed! It automatically creates a Wi-Fi hotspot out in the field if no known network is found.
+- **Raw Power**: Capture uncompressed RAW (DNG) alongside JPEG photos at full IMX477 sensor resolution (4056 × 3040).
+- **Lucky Imaging**: Record high-framerate H.264 MP4 videos (5–60 fps) to stack the clearest frames of planets and the moon.
+- **Full Manual Control**: Adjust Gain, Exposure (from 100 µs up to 200s!), White Balance, Focus, and more—all in real-time.
+- **Astro-Presets**: 1-click tailored presets for Deep Sky, Moon/Planetary, Milky Way, and Lucky Imaging.
+- **Built-in File Browser**: View, download, and delete your cosmic masterpieces directly from your web browser.
 
 ---
 
 ## Requirements
 
-- Raspberry Pi 4 or 5 (3B+ may work)
-- Raspberry Pi HQ Camera (IMX477)
-- Debian 13 (Trixie) or Raspberry Pi OS (Bookworm+)
-- libcamera / picamera2 stack (included in Raspberry Pi OS since 2022-04)
+- **Hardware**: Raspberry Pi 4 or 5 *(3B+ may work but is not primarily targeted)*.
+- **Camera**:[Raspberry Pi HQ Camera (IMX477)](https://www.raspberrypi.com/products/raspberry-pi-high-quality-camera/).
+- **OS**: Debian 13 (Trixie) or Raspberry Pi OS (Bookworm or newer).
+- **Camera Stack**: `libcamera` / `picamera2` *(included by default in Raspberry Pi OS since 2022-04)*.
 
 ---
 
 ## Quick Install
 
+Get your rig up and running in minutes. SSH into your Raspberry Pi and run:
+
 ```bash
 git clone https://github.com/ProfessorQuantumUniverse/HQAstroCam.git
 cd HQAstroCam
 sudo bash install.sh
-# Reboot recommended after first install:
+```
+
+> **⚠️ Important Note:** Sometimes the installation script may appear to freeze at step `7/7`. If this happens, wait about 15 seconds and simply press `Ctrl + C` to exit. The installation is already finished successfully at this point!
+
+After the installation, reboot your Pi:
+```bash
 sudo reboot
 ```
-**NOTE:** It is possible that the installscript at step 7/7 freezes. When that happens please wait 15 seconds and simply press strg+c to exit it (It be already finished at this point).
 
-After reboot, the Pi creates a Wi-Fi hotspot automatically if no other network is available:
+---
+
+## Connection & Network Modes
+
+By default, if HQAstroCam cannot find a known Wi-Fi network, it will **automatically broadcast its own hotspot**. Perfect for remote dark sky locations!
 
 | Setting | Value |
 |---------|-------|
-| SSID    | `HQAstroCam` |
-| Password | *(randomly generated – printed at install time and stored in `/etc/astrocam.conf`)* |
-| Web UI URL | `http://10.42.0.1:8080` |
+| **SSID** | `HQAstroCam` |
+| **Password** | *(Randomly generated during install – securely stored in `/etc/astrocam.conf`)* |
+| **Web UI URL** | `http://10.42.0.1:8080` |
 
-The credentials are stored in `/etc/astrocam.conf` (readable only by root). You can also set them before installing:
+### Customizing Hotspot Credentials
+Want to set your own network name and password *before* installing? Just export these variables before running the install script:
 ```bash
 export ASTROCAM_SSID="MySkyPi"
 export ASTROCAM_HOTSPOT_PW="my_secure_password"
 sudo bash install.sh
 ```
 
+### Other Network Modes
+- **WiFi Client**: Connect to your home router. Click *📡 → Scan Networks* in the Web UI, select your SSID, and enter the password.
+- **Ethernet**: Simply plug in a cable. It will be detected automatically by NetworkManager.
+
 ---
 
-## Camera Setup
+## 📷 Camera Setup (IMX477)
 
-The HQ Camera uses the **IMX477** sensor. Make sure:
-
-1. The CSI ribbon cable is properly connected (camera connector, not display)
-2. After `install.sh`, the following lines are in `/boot/firmware/config.txt`:
-   ```
+To ensure your Pi recognizes the HQ Camera properly:
+1. Ensure the CSI ribbon cable is firmly connected to the **camera port** (not the display port).
+2. Check your `/boot/firmware/config.txt`. The installer should have ensured the following lines are present:
+   ```ini
    camera_auto_detect=1
    dtoverlay=imx477
    ```
-3. Verify the camera is detected: `libcamera-hello --list-cameras`
+3. Verify detection by running: `libcamera-hello --list-cameras`
 
 ---
 
 ## Astrophotography Presets
 
-| Preset | Exposure | Gain | Use Case |
-|--------|----------|------|----------|
-| **Deep Sky** | 30 s | 8× | Nebulae, galaxies |
-| **Planetary / Moon** | 10 ms | 2× | High-detail planetary imaging |
-| **Lucky Imaging** | 100 ms | 4× | Video stacking for planets |
-| **Milky Way** | 15 s | 16× | Wide-field, star trails |
+Forget about messing with tricky settings in the dark. Use our built-in starting points! *(Note: Auto Exposure and Auto White Balance are deliberately disabled for these presets to ensure consistent astrophotography results).*
 
-All presets disable Auto Exposure and Auto White Balance – essential for consistent astrophotography exposures.
+| Preset | Exposure | Gain | Perfect For... |
+|--------|----------|------|----------------|
+| **Deep Sky** | 30 s | 8× | Nebulae, faint galaxies, star clusters |
+| **Planetary / Moon** | 10 ms | 2× | High-detail craters, Jupiter, Saturn |
+| **Lucky Imaging** | 100 ms | 4× | Video stacking to beat atmospheric turbulence |
+| **Milky Way** | 15 s | 16× | Wide-field nightscapes, star trails |
 
----
-
-## Manual Settings
-
-In the Settings panel you can adjust:
-
-- **Exposure Time** – 100 µs to 200 000 000 µs (200 s) – for long deep-sky exposures
-- **Analogue Gain** – 1.0 to 22.26 (IMX477 native range, equivalent to ISO 100–2226)
-- **Colour Gains (R, B)** – manual white balance for accurate star colours
-- **Noise Reduction** – Off / Fast / High Quality (use Off for Lucky Imaging stacking)
-- **Lens Position** – manual focus (0 = infinity; increase for closer objects)
-- **Brightness / Contrast / Saturation / Sharpness** – fine-tuning
+### Manual Overrides
+Need fine-tuning? The **Settings Panel** lets you manually tweak:
+- **Exposure Time**: 100 µs up to a massive 200,000,000 µs (200 seconds)
+- **Analogue Gain**: 1.0 to 22.26 (Native IMX477 range, ISO 100–2226 equivalent)
+- **Color Gains (R, B)**: Absolute control over white balance to get accurate star colors
+- **Noise Reduction**: Off / Fast / High Quality *(Pro-tip: Turn OFF for Lucky Imaging stacking)*
+- **Lens Position**: Manual focus fine-tuning (0 = infinity)
+- **Image Adjustments**: Brightness, Contrast, Saturation, Sharpness
 
 ---
 
-## Network Modes
+## Development & Demo Mode
 
-| Mode | How |
-|------|-----|
-| **Hotspot (default)** | Click *📡 → Enable Hotspot* or automatic if no other network is found |
-| **WiFi client** | Click *📡 → Scan Networks*, select SSID, enter password |
-| **Ethernet** | Plug in the cable – detected automatically by NetworkManager |
+No Raspberry Pi at hand? No problem! HQAstroCam comes with a built-in **Demo Mode**. 
 
----
-
-## Directory Structure
-
-```
-/opt/astrocam/              # Application root
-├── app/
-│   ├── main.py             # FastAPI routes
-│   ├── camera.py           # picamera2 wrapper + mock
-│   ├── network.py          # nmcli network management
-│   └── static/             # Web UI (HTML + CSS + JS)
-├── astrocam.service         # Systemd unit
-├── install.sh               # One-shot installer
-└── requirements.txt
-
-/var/lib/astrocam/captures/  # Saved photos and videos
-```
-
----
-
-## Service Management
-
-```bash
-# View logs
-journalctl -u astrocam -f
-
-# Restart
-sudo systemctl restart astrocam
-
-# Stop
-sudo systemctl stop astrocam
-
-# Status
-sudo systemctl status astrocam
-```
-
----
-
-## Development / Demo Mode
-
-When `picamera2` is not available (e.g., on a desktop PC), the application automatically falls back to **mock/demo mode**. A synthetic star-field preview is streamed, and "captures" write placeholder files. This lets you develop and test the UI without Raspberry Pi hardware.
+If `picamera2` is unavailable (e.g., when running on a standard Windows/Mac/Linux desktop PC), the app automatically falls back to a mock mode. It streams a synthetic star-field and writes placeholder files for captures, allowing you to develop or test the UI without hardware!
 
 ```bash
 pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
+### Directory Structure
+```text
+/opt/astrocam/                # Application root
+├── app/
+│   ├── main.py               # FastAPI backend routes
+│   ├── camera.py             # picamera2 wrapper & demo mock fallback
+│   ├── network.py            # nmcli network management
+│   └── static/               # Beautiful Web UI (HTML, CSS, JS)
+├── astrocam.service          # Systemd unit file
+├── install.sh                # One-shot installer script
+└── requirements.txt
+
+/var/lib/astrocam/captures/   # Where your cosmic masterpieces are saved
+```
+
 ---
 
-## License
+## Service Management
 
-See [LICENSE](LICENSE).
+The app runs in the background as a systemd service (`astrocam.service`). You can manage it easily via the command line:
+
+```bash
+# View live logs
+journalctl -u astrocam -f
+
+# Restart the service
+sudo systemctl restart astrocam
+
+# Stop the service
+sudo systemctl stop astrocam
+
+# Check status
+sudo systemctl status astrocam
+```
+
+---
+
+## 📜 License
+
+This project is open-source and licensed under the[GPL-3.0 License](LICENSE).
