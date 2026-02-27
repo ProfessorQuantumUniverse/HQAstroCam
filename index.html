@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQAstroCam | Gateway to the Stars</title>
+    <!-- Google Fonts: Space Grotesk for headings, Inter for clean text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #f87171; /* Astro Red for Night Vision aesthetic */
+            --bg: #030712; /* Deep Space Black */
+            --glass: rgba(17, 24, 39, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Starfield Background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        header {
+            text-align: center;
+            padding: 8rem 0 5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(248, 113, 113, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 3rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #ef4444;
+            box-shadow: 0 0 35px rgba(248, 113, 113, 0.6);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background-color: var(--glass);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Glassmorphism Cards */
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(248, 113, 113, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Terminal Window for Quick Install */
+        .terminal-container {
+            max-width: 800px;
+            margin: 5rem auto;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal-header {
+            background: #1e293b;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #38bdf8;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .terminal-body .command { color: #f8fafc; }
+        .terminal-body .comment { color: #64748b; }
+        .terminal-body .highlight { color: #f87171; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 5rem;
+            color: var(--text-muted);
+        }
+
+        footer p { margin-bottom: 0.5rem; }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .nav-links { display: none; }
+            .btn-group { flex-direction: column; }
+            .terminal-body { font-size: 0.9rem; padding: 1.5rem; }
+            header { padding: 5rem 0 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="#" class="logo">🔭 HQAstroCam</a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#install">Install</a>
+                <a href="https://github.com/ProfessorQuantumUniverse/HQAstroCam" target="_blank">GitHub</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header>
+            <div class="badge">🚀 Compatible with Raspberry Pi 4 & 5</div>
+            <h1>Gateway to the Stars.</h1>
+            <p class="subtitle">Turn your Raspberry Pi and HQ Camera (IMX477) into a fully self-contained, night-vision-friendly astrophotography rig. Built with the modern libcamera stack.</p>
+            <div class="btn-group">
+                <a href="#install" class="btn btn-primary">Quick Install</a>
+                <a href="https://github.com/ProfessorQuantumUniverse/HQAstroCam" target="_blank" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </header>
+
+        <!-- Features Grid -->
+        <section id="features" class="features">
+            <h2 class="section-title">Engineered for the Dark Sky</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">🔴</div>
+                    <h3>Night-Vision UI</h3>
+                    <p>A deep-navy interface with a one-click <strong>Dim/Red Mode</strong> ensures your eyes stay dark-adapted while observing in the field.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📡</div>
+                    <h3>Zero-Config Hotspot</h3>
+                    <p>No router? No problem. It automatically broadcasts a Wi-Fi hotspot out in the wild if no known network is found.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📸</div>
+                    <h3>Uncompressed RAW</h3>
+                    <p>Extract every photon. Capture uncompressed <strong>RAW (DNG)</strong> files alongside high-quality JPEGs at full 12.3MP resolution.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎥</div>
+                    <h3>Lucky Imaging</h3>
+                    <p>Record high-framerate H.264 MP4 videos (up to 60fps) to "beat the seeing" for stunning planetary and lunar stacking workflows.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⏳</div>
+                    <h3>Long Exposures</h3>
+                    <p>Take full manual control with native support for shutter speeds ranging from a rapid 100µs all the way up to <strong>200 seconds</strong>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌌</div>
+                    <h3>Astro-Presets</h3>
+                    <p>Forget manual tweaking in the dark. Built-in 1-click tailored presets for Deep Sky, Planetary/Moon, Milky Way, and Lucky Imaging.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Terminal -->
+        <section id="install">
+            <h2 class="section-title">Get Started in Minutes</h2>
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="terminal-body">
+                    <span class="comment"># 1. SSH into your Raspberry Pi running Debian 13 (Trixie) or Bookworm</span><br>
+                    <span class="comment"># 2. Clone the repository and run the automated installer</span><br><br>
+                    
+                    <span class="command">git clone https://github.com/ProfessorQuantumUniverse/HQAstroCam.git</span><br>
+                    <span class="command">cd HQAstroCam</span><br>
+                    <span class="command">sudo bash install.sh</span><br><br>
+                    
+                    <span class="comment"># 3. Once finished, reboot your Pi</span><br>
+                    <span class="command">sudo reboot</span><br><br>
+                    
+                    <span class="comment"># 🚀 HQAstroCam is now running in the background!</span><br>
+                    <span class="comment"># Access it via browser at: <span class="highlight">http://&lt;your-pi-ip&gt;:8080</span></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Made with ❤️ and 🔭 for the Astrophotography Community</p>
+            <p>© 2026 <a href="https://github.com/ProfessorQuantumUniverse" target="_blank">Lorenzo Bay-Müller</a>. Open Source under GPL-3.0 License.</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript for Interactive Starfield Background -->
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars =[];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initStars();
+        }
+
+        function initStars() {
+            stars =
