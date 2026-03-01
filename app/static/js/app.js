@@ -339,8 +339,11 @@ function renderFiles(files) {
       a.href = url;
       a.download = name;
       document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      try {
+        a.click();
+      } finally {
+        document.body.removeChild(a);
+      }
     });
   });
 
