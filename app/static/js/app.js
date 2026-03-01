@@ -331,6 +331,19 @@ function renderFiles(files) {
     list.appendChild(item);
   });
 
+  list.querySelectorAll('.file-btn.dl').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.name;
+      const url = window.location.origin + '/api/files/' + encodeURIComponent(name);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  });
+
   list.querySelectorAll('.file-btn.del').forEach(btn => {
     btn.addEventListener('click', async () => {
       const name = btn.dataset.name;
