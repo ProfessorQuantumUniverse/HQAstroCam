@@ -8,6 +8,8 @@
 [![Python](https://img.shields.io/badge/Python-3.9+-yellow.svg)](https://www.python.org/)
 [![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi-red.svg)](https://www.raspberrypi.org/)
 [![OS](https://img.shields.io/badge/OS-Debian%2013-purple.svg)](https://www.debian.org/)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/ProfessorQuantumUniverse/HQAstroCam/total)
+
 
 **Turn your Raspberry Pi into a high-performance, standalone astrophotography rig.**
 
