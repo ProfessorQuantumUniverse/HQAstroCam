@@ -245,7 +245,8 @@ class RealCamera:
             jpeg_path = str(self.capture_dir / f"photo_{timestamp}.jpg")
             if capture_raw:
                 raw_path = str(self.capture_dir / f"photo_{timestamp}.dng")
-                self._cam.capture_file(jpeg_path, raw=raw_path)
+                self._cam.capture_file(jpeg_path)
+                self._cam.capture_file(raw_path, name="raw")
                 files.append(raw_path)
             else:
                 self._cam.capture_file(jpeg_path)
@@ -280,7 +281,10 @@ class RealCamera:
         vid_cfg = self._cam.create_video_configuration(
             main={"size": self.VIDEO_SIZE},
         )
+        self._cam.stop_recording()
+        self._cam.stop()
         self._cam.configure(vid_cfg)
+        self._cam.start()
         encoder = H264Encoder(bitrate=10_000_000)
         self._cam.start_recording(encoder, FfmpegOutput(self._recording_path))
         self._recording = True
@@ -290,11 +294,13 @@ class RealCamera:
             if not self._recording:
                 return None
             self._cam.stop_recording()
+            self._cam.stop()
             self._recording = False
             path = self._recording_path
             self._recording_path = None
             # Restore preview
             self._configure_preview()
+            self._cam.start()
         return path
 
     @property
