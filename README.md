@@ -173,6 +173,8 @@ Distributed under the **GPL-3.0 License**. See `LICENSE` for more information.
 
 ### © Lorenzo Bay-Müller 2026 ⸻> any future year you currently might have!
 
+![HQAstroCam](https://socialify.git.ci/ProfessorQuantumUniverse/HQAstroCam/image?description=1&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit+Board&pulls=1&stargazers=1&theme=Dark)
+
 
 <p align="center">
   <img src="assets/Banner_option1.png" alt="HQAstroCam - Raspberry Pi Astrophotography" width="100%">
