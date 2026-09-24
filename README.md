@@ -13,6 +13,14 @@
 
 **Turn your Raspberry Pi into a high-performance, standalone astrophotography rig.**
 
+<!-- INSTALL BUTTONS START -->
+<p align="center">
+  <a href="#-quick-install"><img src="https://img.shields.io/badge/Install%20on-Raspberry%20Pi-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white" alt="Install on Raspberry Pi" height="40"></a>
+  <a href="https://github.com/ProfessorQuantumUniverse/HQAstroCam/releases/latest"><img src="https://img.shields.io/badge/Download-latest%20release-555555?style=for-the-badge&logo=github&logoColor=white" alt="Download the latest release" height="40"></a>
+  <a href="https://professorquantumuniverse.github.io/HQAstroCam/"><img src="https://img.shields.io/badge/Visit-Website-1E3A8A?style=for-the-badge&logo=astro&logoColor=white" alt="Website" height="40"></a>
+</p>
+<!-- INSTALL BUTTONS END -->
+
 HQAstroCam is a purpose-built web application designed for the **Raspberry Pi HQ Camera (IMX477)**. It leverages the modern `libcamera` and `picamera2` stack to give you full manual control over your sensor from any device. Whether you're in your backyard or at a remote dark-sky site, HQAstroCam is your gateway to the stars.
 
 ---
